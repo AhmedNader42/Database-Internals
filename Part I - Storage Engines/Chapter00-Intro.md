@@ -1,6 +1,6 @@
 # Introduction
 
-The primary job of a DBMS is reliably storing data and making it available for users. Databases are primary sources of data, helping us share with with different parts of our applications. Instead of finding a way to store and retrieve information and inventing new ways to organize data every time we create a new app. This way we can concentrate on application logic instead of infrastructure.
+The primary job of a DBMS is reliably storing data and making it available for users. Databases are primary sources of data, helping us share with different parts of our applications. Instead of finding a way to store and retrieve information and inventing new ways to organize data every time we create a new app. This way we can concentrate on application logic instead of infrastructure.
 
 ### Database Modules
 
@@ -23,7 +23,7 @@ The choice of database has long-term consequences. Database may not be a good fi
 
 Trying to compare databases based on their components(modules above), their online ranking(arbitrary) or their implementation language can lead to invalid and premature conclusions.
 
-Simulating real-world workloads helps you understand how the databases performs and how to operate and debug. Performance is not always the most important aspect. Better to a database that slowly saves the date, rather than one that quickly loses it.
+Simulating real-world workloads helps you understand how the databases performs and how to operate and debug. Performance is not always the most important aspect. Better to a database that slowly saves the data, rather than one that quickly loses it.
 
 Understand the following variables:
 
@@ -50,4 +50,4 @@ The ideal scenario is to be able to use the database as a black-box without havi
 
 Designing a storage engine is more complicated than implementing a text-book data structure. There are many details like designing physical data layout, organizing pointers, deciding on the serialization formats, understanding how data is going to be garbage collected and figure out how to make it concurrent.
 
-tradeoff example: If we save records in the order they were inserted into the database it will store them quicker, but if we retrieve them in their lexicographical order we will have to re-sort them.
+tradeoff example: If we save records in the order they were inserted into the database it will store them quicker, but if we retrieve them in their lexicographical order we will have to re-sort them at read-time.

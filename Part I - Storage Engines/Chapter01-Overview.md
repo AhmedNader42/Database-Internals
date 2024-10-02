@@ -50,7 +50,7 @@ Local queries(coming directly from clients or from other nodes) are executed by 
   - Better for spatial locality (If a memory location is accessed then its nearby memory locations will be accessed soon)
   - This is great when we need to access an entire record's data, but more expensive when fetching a single column
 
-- Column-orients: Store the values of the same column together
+- Column-Oriented: Store the values of the same column together
 
   - Partition the data vertically, Meaning values for the same column are stored contiguously on disk
   - Great fit for analytical workloads that compute aggregates, such as finding trends, computing averages
@@ -77,6 +77,37 @@ Local queries(coming directly from clients or from other nodes) are executed by 
 
   Database systems store data records, consisting of multiple fields in tables. Where each table is usually represented in a separate file. Each record in a table can be looked up using a search key. To locate records, DBMS uses indexes, which are auxiliary data structures that allow it to locate records efficiently without having to do a full scan.
 
-  Files are partitioned into pages, which typically have the size of a single or be a multiple of disk block size. Pages can be organized as sequences of records or as slotted pages.
+  Usually DBMS separates data files and index files. Data files store data records, while index files store record metadata used to locate records in data files. Files are partitioned into pages, which typically have the size of a single or be a multiple of disk block size. Pages can be organized as sequences of records or as slotted pages.
 
   New records and updates to existing records are represented by key/value pairs. Modern storage systems don't delete data from pages, but instead use deletion markers (tombstones). Which contain deletion metadata
+
+  #### Data files
+
+  Data files can be implemented as index-organized tables (IOT), heap-organized tables (heap files), or hash-organized tables (hashed files)
+
+  - Heap files: Records are not required to follow any particular order, so usually it is kept in write order. This means no additional reorganization is needed for any appended pages, but indexes are required to make them searchable.
+  - Hash files: Records are stored in buckets based on the hash key. Records in the bucket can be stored in append order or sorted by key to improve lookup times
+  - Index-organized: Store data records in the index itself. Since records are stored in key order, range scans are possible by sequentially scanning the content.
+
+  #### Index files
+
+  An index is a structure that organizes data records on-disk to facilitate efficient retrieval operations.
+
+  An index on a data (primary) file is called primary index. However, We can assume that the primary index is built on a primary key. All other indexes are called secondary indexes.
+
+  Secondary Indexes can point to data records or simply store it's primary key. A pointer to data record can hold an offset in heap file or IOT. Multiple secondary indexes can point to the same records.
+
+  Primary index hold unique entry per search key, but secondary indexes may hold several records per search key.
+
+  Clustered Index: If the order of search records follows the order of the search key. Records are usually stored in the same file (clustered file)
+  Non-Clustered Index: If the data does not follow key order and is stored in separate files
+
+  Many databases have an inherent implicit primary key, in case not specified some add a new auto increment column.
+
+  ### Buffering, Immutability and Ordering
+
+  - Buffering: Whether the storage engine chooses to use memory to hold records before storing them on-disk. Every on-disk structure has to use buffering to some degree, since the smallest unit to be stored is a block.
+
+  - Mutability: Whether the storage structure reads parts of the file, updates them and writes them in place. Immutable structures are append only
+
+  - Ordering: Whether the data records are stored in key order in the pages on-disk. Ordering defines if we can scan ranges of records
